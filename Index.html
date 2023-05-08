@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    </head>
+    <body>
+        <h1>Timer maldito</h1>
+        <form>
+            <input type="number" id="minutosPessoa"name="minutosPessoa" />
+            <input type="button" value="Iniciar Contador" onClick="startCounter();"/>
+        </form>
+        <p>E aqui é o tempo restante para você malandro: <span id="contador" name="contador">0</span></p>
+    </body>
+    <script>
+        const minutos = 60;
+        var start = new Date;
+
+        function startCounter(){
+            let tempoInserido = $('#minutosPessoa').val();
+
+            $('#contador').text(MontaTexto(tempoInserido));
+
+            setInterval(function() {
+                let tempoPassado = Math.round((new Date - start) / (minutos * 1000));
+                let tempoRestante = tempoInserido - tempoPassado;
+                let textoContador = MontaTexto(tempoRestante);
+                AtualizaCoresContador(tempoRestante);
+                $('#contador').text(textoContador);
+            }, (minutos * 1000));
+        }
+
+        function MontaTexto(tempoRestante){
+            if(tempoRestante == 0)
+                return "Acabou o tempo!!!";
+            if(tempoRestante == 1)
+                return `Tempo acabando!! Só falta ${tempoRestante} minuto!!`
+            if(tempoRestante < 5)
+                return `Tempo acabando!! Só faltam ${tempoRestante} minutos!!`
+            return `${tempoRestante} minutos restantes!!`
+        }
+
+        function AtualizaCoresContador(tempoRestante){
+            if(tempoRestante < 1){
+                $('#contador').css('color', 'red');
+                return;
+            }
+            if(tempoRestante < 5){
+                $('#contador').css('color', 'orange');
+                return;
+            }
+
+            $('#contador').css('color', 'black');
+        }
+    </script>
+</html>
