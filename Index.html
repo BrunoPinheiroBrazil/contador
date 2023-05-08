@@ -12,31 +12,42 @@
         <p>E aqui é o tempo restante para você malandro: <span id="contador" name="contador">0</span></p>
     </body>
     <script>
-        const minutos = 60;
         var start = new Date;
+        var interval;
 
         function startCounter(){
             let tempoInserido = $('#minutosPessoa').val();
 
-            $('#contador').text(MontaTexto(tempoInserido));
+            $('#contador').text(MontaTexto(tempoInserido * 60 * 1000));
 
-            setInterval(function() {
-                let tempoPassado = Math.round((new Date - start) / (minutos * 1000));
-                let tempoRestante = tempoInserido - tempoPassado;
+            clearInterval(interval);
+
+            interval = setInterval(function() {
+                let tempoPassado = new Date - start;
+                let tempoRestante = (tempoInserido * 1000 * 60) - tempoPassado;
                 let textoContador = MontaTexto(tempoRestante);
                 AtualizaCoresContador(tempoRestante);
                 $('#contador').text(textoContador);
-            }, (minutos * 1000));
+            }, 1000);
         }
 
         function MontaTexto(tempoRestante){
-            if(tempoRestante == 0)
-                return "Acabou o tempo!!!";
-            if(tempoRestante == 1)
-                return `Tempo acabando!! Só falta ${tempoRestante} minuto!!`
-            if(tempoRestante < 5)
-                return `Tempo acabando!! Só faltam ${tempoRestante} minutos!!`
-            return `${tempoRestante} minutos restantes!!`
+            var horaFormatada = MontaHora(tempoRestante);
+            return `${horaFormatada} restantes!!`
+        }
+
+        function MontaHora(tempoRestante){
+            let dias = Math.floor(tempoRestante / (1000 * 60 * 60 * 24));
+            let horas = Math.floor(tempoRestante / (1000 * 60 * 60));
+            let mins = Math.floor(tempoRestante / (1000 * 60));
+            let segundos = Math.floor(tempoRestante / 1000);
+
+            let d = dias;
+            let h = horas - dias * 24;
+            let m = mins - horas * 60;
+            let s = segundos - mins * 60;
+
+            return `${d} dias - ${h}:${m}:${s}`;
         }
 
         function AtualizaCoresContador(tempoRestante){
